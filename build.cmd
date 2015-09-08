@@ -1,0 +1,1 @@
+node cli > ..\ksana-layer-react-sandbox\src\cbetadata.js
