@@ -31,7 +31,11 @@ var handlers={
 	}
 	,"cb:mulu_close":function(name) {
 		if (inSid){
-			if (context.text) context.text+='</sid>';
+			if (context.text && sid) context.text+='</sid>';
+
+			//manual fix taisho range 
+			if (sid=="755-7") sid="755-757";
+			if (sid=="772-4") sid="772-774";
 			context.text+='<sid n="'+sid+'">';
 			inSid="";
 		}
@@ -39,7 +43,7 @@ var handlers={
 	}
 	,"pb_open":function(e) {
 		var shortfilename=filename.substr(filename.length-7,3).replace(/^0+/,"");
-		context.text+='<pb n="'+shortfilename+"."+e.attributes.n.replace(/^0+/,"")+'"/>';
+		if (outputtext) context.text+='<pb n="'+shortfilename+"."+e.attributes.n.replace(/^0+/,"")+'"/>';
 	}
 	,"p_open":function(e) {
 		if (e.attributes["xml:id"]) {
@@ -92,8 +96,9 @@ var extract_jin=function(content,fn){
 	if (tagstack.length) {
 		throw "tagstack no null" + tagstack.join("/");
 	}
-	context.text=context.text.replace(/\r?\n\r?\n/g,"\n").trim();
-	context.text+="\n</sid>";
+	
+	//context.text+="\n</sid>";
+
 }
 
 var processfile=function(fn){
@@ -102,6 +107,12 @@ var processfile=function(fn){
 }
 lst.map(processfile);
 
+//replace empty <sid><sid>
+context.text+="\n</sid>";
+context.text=context.text.replace(/<sid n="(\d+)"><\/sid>/g,"");
+context.text=context.text.replace(/<lg><\/lg>/g,"");
+
+context.text=context.text.replace(/\r?\n\r?\n/g,"\n").trim();
 
 if (writeToDisk) {
 	fs.writeFileSync("t99.xml",context.text,"utf8");
