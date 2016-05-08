@@ -12,6 +12,7 @@ var sethandler=function(context,parser,closetag) {
 		}
 	}
 	var ontext=function(t){
+		if (!context.text && !t.trim()) return;
 		context.text+=t;
 		offset+=t.length;
 	}

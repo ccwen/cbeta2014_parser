@@ -1,1 +1,1 @@
-node cli > ..\ksana-layer-react-sandbox\src\cbetadata.js
+node cli > ..\cbeta_multiversion\src\cbetadata.js

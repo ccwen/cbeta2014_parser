@@ -41,6 +41,7 @@ var p5tojson=function(content){
 		text:context.text
 		,notes:context.notes
 		,versions:context.versions
+		,offsets:context.offsets
 	}
 	
 }
