@@ -5,7 +5,7 @@ var fs=require("fs");
 var Sax=require("sax");
 var lst=fs.readFileSync("sa.lst","utf8").split(/\r?\n/);
 var filename="",outputtext=false,inSid=false,sid="";
-var tagstack=[],context={text:""};
+var tagstack=[],context={text:"",pb:""};
 var writeToDisk=true,hasP=false,hasLg=false;
 var handlers={
 	"cb:div_open":function(e){
@@ -36,14 +36,16 @@ var handlers={
 			//manual fix taisho range 
 			if (sid=="755-7") sid="755-757";
 			if (sid=="772-4") sid="772-774";
-			context.text+='<sid n="'+sid+'">';
+			context.text+='<sid n="'+sid+'" pb="'+context.pb+'">';
 			inSid="";
 		}
 
 	}
 	,"pb_open":function(e) {
 		var shortfilename=filename.substr(filename.length-7,3).replace(/^0+/,"");
-		if (outputtext) context.text+='<pb n="'+shortfilename+"."+e.attributes.n.replace(/^0+/,"")+'"/>';
+		var pb=e.attributes.n.replace(/^0+/,"");
+		context.pb=pb;
+		if (outputtext) context.text+='<pb n="'+shortfilename+"."+pb+'"/>';
 	}
 	,"p_open":function(e) {
 		if (e.attributes["xml:id"]) {
